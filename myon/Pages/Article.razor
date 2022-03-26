@@ -1,0 +1,28 @@
+﻿@using BlazorMarkdown
+
+@if (IsMainComponent)
+{
+    <PageTitle>@Title</PageTitle>
+}
+
+<Markdown FilePath=@MarkdownFilePath />
+
+
+@code {
+    [Parameter]
+    public bool IsMainComponent { get; set; } = false;
+
+    [Parameter]
+    public string Title
+    {
+        get => _title ?? MarkdownFilePath ?? "no title";
+        set => _title = value;
+    }
+
+    [Parameter]
+    public string? MarkdownFilePath { get; set; }
+
+    private string? _title;
+
+        
+}

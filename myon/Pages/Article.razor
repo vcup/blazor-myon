@@ -1,28 +1,20 @@
-﻿@using BlazorMarkdown
-
-@if (IsMainComponent)
+﻿@if (IsMainComponent & Title is not null)
 {
-    <PageTitle>@Title</PageTitle>
+    <PageTitle>@Title - myon</PageTitle>
 }
+@using BlazorMarkdown
 
-<Markdown FilePath=@MarkdownFilePath/>
-
+<Panel ID=@Title>
+    <h1>@Title</h1>
+    <Markdown FilePath=@Path.Join("wwwroot/Articles", Title + ".md") />
+</Panel>
 
 @code {
     [Parameter]
     public bool IsMainComponent { get; set; } = false;
 
     [Parameter]
-    public string Title
-    {
-        get => _title ?? MarkdownFilePath ?? "no title";
-        set => _title = value;
-    }
-
-    [Parameter]
-    public string? MarkdownFilePath { get; set; }
+    public string? Title { get; set; }
 
     private string? _title;
-
-        
 }

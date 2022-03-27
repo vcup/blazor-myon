@@ -16,5 +16,17 @@
     @RenderBody()
 
    <script src="_framework/blazor.server.js"></script>
+   <script>
+       function scrollToElementByID(id) {
+           var curtop = 0;
+           obj = document.getElementById(id)
+           if (obj.offsetParent) {
+               do {
+                   curtop += obj.offsetTop;
+               } while (obj = obj.offsetParent);
+           }
+           window.scroll(0, curtop)
+       }
+   </script>
 </body>
 </html>

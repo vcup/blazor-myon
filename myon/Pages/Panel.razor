@@ -1,8 +1,11 @@
-﻿<div class="Panel">
+﻿<div id="@ID" class="Panel">
     @ChildContent 
 </div>
 
 @code {
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string? ID { get; set; }
 }

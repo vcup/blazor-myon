@@ -1,0 +1,25 @@
+﻿@page "/Article/{Title?}"
+@inject IJSRuntime JS
+
+@using System.IO
+
+@foreach(var title in Directory.EnumerateFiles(ArticlesPath)
+                                  .Select(Path.GetFileNameWithoutExtension))
+{
+    <Article Title=@title IsMainComponent=@(title == Title)/>
+}
+
+@code {
+
+    [Parameter]
+    public string? Title { get; set; }
+
+    private string ArticlesPath = "wwwroot/Articles";
+
+    protected override async void OnInitialized()
+    {
+        base.OnInitialized();
+        if (Title is not null)
+            await JS.InvokeVoidAsync("scrollToElementByID", Title);
+    }
+}

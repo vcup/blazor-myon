@@ -6,9 +6,10 @@
     margin: 24px 14.2% 24px 12.5%;
 }
 
+
 div#ArticleMenu {
-    width: 16.8%;
-    height: 95.33%;
+    width: 16.8vw;
+    height: 95.33vh;
     position: fixed;
 }
 
@@ -40,7 +41,22 @@ div#MyonSign {
     color: #707070;
 }
 
+
 div#ArticlesIndex {
+    display:grid;
+    grid-template-rows: auto;
+}
+
+div#ArticleContentIndex {
+    overflow-y: scroll;
+}
+div#ArticleContentIndex::-webkit-scrollbar {
+    display: none;
+}
+
+div.ArticleOnMenu {
+    height: 8vh;
+    margin-bottom: 8px;
 }
 
 div#Other {

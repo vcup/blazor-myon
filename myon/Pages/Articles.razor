@@ -13,7 +13,16 @@
                 <span id=SignText>@SignText</span>
             </div>
             <div id="ArticlesIndex">
-                <strong>@Title</strong>
+                <div id="ArticleContentIndex">
+                    @foreach(var article in articles)
+                    {
+                        <div class="ArticleOnMenu" @onclick="@(_ => { SetFocusArticle(article.Title); ScrollToArticleAsync(article);})">
+                        <Panel Heigth="100%">
+                            @article.Title
+                        </Panel>
+                        </div>
+                    }
+                </div>
             </div>
             <div id="Other"></div>
         </div>
@@ -48,11 +57,11 @@
 
     private string ArticlesPath = "wwwroot/Articles";
 
-    protected override async void OnInitialized()
+    protected override void OnInitialized()
     {
         if (SpecifyArticle is not null)
         {
-            await JS.InvokeVoidAsync("scrollToElementByID", SpecifyArticle);
+            ScrollToArticleAsync(SpecifyArticle);
             SetFocusArticle(SpecifyArticle);
             StateHasChanged(); // 如果不调用，则尽管FocusArticle和Title都已更新，仍旧不会在标题中显示Title
         }
@@ -67,4 +76,7 @@
 
     private void SetFocusArticle(int index) => FocusArticle = articles.ElementAt(index);
     private void SetFocusArticle(string title) => FocusArticle = articles.Where(a => a.Title == title).ElementAtOrDefault(0) ?? FocusArticle;
+
+    private async void ScrollToArticleAsync(string title) => await JS.InvokeVoidAsync("scrollToElementByID", title);
+    private void ScrollToArticleAsync(Article article) => ScrollToArticleAsync(article.Title!);
 }

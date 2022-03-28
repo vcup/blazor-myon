@@ -1,4 +1,4 @@
-﻿@page "/Article/{Title?}"
+﻿@page "/Article/{SpecifyArticle?}"
 @inject IJSRuntime JS
 
 @using System.IO
@@ -12,7 +12,9 @@
                 <strong id=MyonText>Myon~</strong>
                 <span id=SignText>@SignText</span>
             </div>
-            <div id="ArticlesIndex"></div>
+            <div id="ArticlesIndex">
+                <strong>@Title</strong>
+            </div>
             <div id="Other"></div>
         </div>
     </Panel>
@@ -21,19 +23,26 @@
     <div />
 
     <main id="Articles">
-        @foreach(var title in Directory.EnumerateFiles(ArticlesPath)
-                                       .Select(Path.GetFileNameWithoutExtension))
-        {
-            <Article Title=@title IsMainComponent=@(title == Title)/>
+        @{
+            var i = 0;
+            foreach (var title in Directory.EnumerateFiles(ArticlesPath)
+                                           .Select(Path.GetFileNameWithoutExtension))
+            {
+                var index = i++;
+                <div @onpointerover="@(_ => SetFocusArticle(index))">
+                <Article Title=@title IsMainComponent=@(title == Title) @ref="addArticleToList"/>
+                </div>
+            }
         }
     </main>
-    
+
 </div>
 
 @code {
-
     [Parameter]
-    public string? Title { get; set; }
+    public string? SpecifyArticle { get; set; }
+
+    public string? Title => FocusArticle?.Title;
 
     public string SignText { get; set; } = "私はそれを、我慢できない！";
 
@@ -41,8 +50,21 @@
 
     protected override async void OnInitialized()
     {
-        base.OnInitialized();
-        if (Title is not null)
-            await JS.InvokeVoidAsync("scrollToElementByID", Title);
+        if (SpecifyArticle is not null)
+        {
+            await JS.InvokeVoidAsync("scrollToElementByID", SpecifyArticle);
+            SetFocusArticle(SpecifyArticle);
+            StateHasChanged(); // 如果不调用，则尽管FocusArticle和Title都已更新，仍旧不会在标题中显示Title
+        }
+
     }
+
+    private Article addArticleToList { set => articles.Add(value); }
+
+    public Article? FocusArticle { get; set; }
+
+    private List<Article> articles = new();
+
+    private void SetFocusArticle(int index) => FocusArticle = articles.ElementAt(index);
+    private void SetFocusArticle(string title) => FocusArticle = articles.Where(a => a.Title == title).ElementAtOrDefault(0) ?? FocusArticle;
 }

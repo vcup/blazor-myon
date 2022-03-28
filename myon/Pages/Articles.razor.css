@@ -14,7 +14,7 @@ div#ArticleMenu {
 
 div#ArticleMenuInsideLayout {
     height: 95.33%;
-    margin: 32px 16px 16px 16px;
+    margin: 32px 16px 16px;
     display: grid;
     grid-template-rows: 12.28% 67.54% 16.67%;
     gap: 16px;

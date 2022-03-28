@@ -1,0 +1,53 @@
+﻿div#warpper {
+    display: grid;
+    grid-template-columns: 22.8% auto;
+    grid-template-rows: 100%;
+    gap: 16px;
+    margin: 24px 14.2% 24px 12.5%;
+}
+
+div#ArticleMenu {
+    width: 16.8%;
+    height: 95.33%;
+    position: fixed;
+}
+
+div#ArticleMenuInsideLayout {
+    height: 95.33%;
+    margin: 32px 16px 16px 16px;
+    display: grid;
+    grid-template-rows: 12.28% 67.54% 16.67%;
+    gap: 16px;
+}
+
+div#MyonSign {
+    display: grid;
+    grid-template-rows: 64.28% 14.28%;
+    gap: 24px;
+}
+
+#MyonText {
+    text-align: center;
+    font-size: 54px;
+}
+
+#SignText {
+
+    text-align: center;
+    font-size: 12px;
+    font-family: sans-serif;
+    font-weight: lighter;
+    color: #707070;
+}
+
+div#ArticlesIndex {
+}
+
+div#Other {
+
+}
+
+main#Articles {
+    display: grid;
+    gap: 16px;
+}

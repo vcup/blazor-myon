@@ -1,4 +1,7 @@
-﻿<div id="@ID" class="Panel">
+﻿<div id="@ID" class="@Class" style="
+    width: @Weight;
+    height: @Heigth;
+">
     @ChildContent 
 </div>
 
@@ -8,4 +11,18 @@
 
     [Parameter]
     public string? ID { get; set; }
+
+    [Parameter]
+    public string Weight { get; set; } = "auto";
+
+    [Parameter]
+    public string Heigth { get; set; } = "auto";
+
+    [Parameter]
+    public string Class {
+        get => _class;
+        set => _class += " " + value;
+    }
+
+    private string _class = "Panel";
 }

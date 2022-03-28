@@ -3,16 +3,39 @@
 
 @using System.IO
 
-@foreach(var title in Directory.EnumerateFiles(ArticlesPath)
-                                  .Select(Path.GetFileNameWithoutExtension))
-{
-    <Article Title=@title IsMainComponent=@(title == Title)/>
-}
+<div id="warpper">
+
+    <div id="ArticleMenu">
+    <Panel Heigth="100%">
+        <div id="ArticleMenuInsideLayout">
+            <div id="MyonSign">
+                <strong id=MyonText>Myon~</strong>
+                <span id=SignText>@SignText</span>
+            </div>
+            <div id="ArticlesIndex"></div>
+            <div id="Other"></div>
+        </div>
+    </Panel>
+    </div>
+
+    <div />
+
+    <main id="Articles">
+        @foreach(var title in Directory.EnumerateFiles(ArticlesPath)
+                                       .Select(Path.GetFileNameWithoutExtension))
+        {
+            <Article Title=@title IsMainComponent=@(title == Title)/>
+        }
+    </main>
+    
+</div>
 
 @code {
 
     [Parameter]
     public string? Title { get; set; }
+
+    public string SignText { get; set; } = "私はそれを、我慢できない！";
 
     private string ArticlesPath = "wwwroot/Articles";
 

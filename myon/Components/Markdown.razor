@@ -1,0 +1,22 @@
+﻿@using myon.Data
+@inject MarkdownParserService MarkdownService
+
+<div id="@ID" class="md-content">
+    @markupString
+</div>
+
+@code {
+    [Parameter]
+    public string Path { get; set; }
+
+    [Parameter]
+    public string? ID { get; set; }
+
+    public MarkupString markupString;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        markupString = new(MarkdownService.GetHtmlFormMarkdownFile(Path));
+    }
+}

@@ -2,12 +2,11 @@
 {
     <PageTitle>@Title - myon</PageTitle>
 }
-@using BlazorMarkdown
 
 <Panel ID=@Title>
     <div style="margin:16px">
     <h1>@Title</h1>
-    <Markdown FilePath=@Path.Join("wwwroot/Articles", Title + ".md") />
+    <Markdown Path=@Path.Join("wwwroot/Articles", Title + ".md") />
     </div>
 </Panel>
 

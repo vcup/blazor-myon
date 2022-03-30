@@ -6,7 +6,7 @@
 <Panel ID=@Title>
     <div style="margin:16px">
     <h1>@Title</h1>
-    <Markdown Path=@Path.Join("wwwroot/Articles", Title + ".md") />
+    <Markdown ID="@Title" Path=@Path.Join("wwwroot/Articles", Title + ".md") @ref="markdown"/>
     </div>
 </Panel>
 
@@ -17,5 +17,7 @@
     [Parameter]
     public string? Title { get; set; }
 
-    private string? _title;
+    private Markdown markdown;
+
+    public string[] ArticleIndex => markdown.HeadingIDs.ToArray();
 }

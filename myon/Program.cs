@@ -9,6 +9,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 builder.Services.AddSingleton<MarkdownParserService>();
+builder.Services.AddSingleton<UniqueNumberService>();
 
 var app = builder.Build();
 

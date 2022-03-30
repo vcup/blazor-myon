@@ -1,7 +1,7 @@
 ﻿@using myon.Data
 @inject MarkdownParserService MarkdownService
 
-<div id="@ID" class="md-content">
+<div class="md-content">
     @markupString
 </div>
 
@@ -12,7 +12,9 @@
     [Parameter]
     public string? ID { get; set; }
 
-    public MarkupString markupString;
+    public List<string> HeadingIDs { get; set; } = new();
+
+    private MarkupString markupString;
 
     protected override void OnParametersSet()
     {

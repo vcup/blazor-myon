@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-builder.Services.AddSingleton<MarkdownParserService>();
+builder.Services.AddTransient<MarkdownParserService>();
 builder.Services.AddSingleton<UniqueNumberService>();
 
 var app = builder.Build();

@@ -1,29 +1,34 @@
 ﻿@page "/Article/{SpecifyArticle?}"
 @inject IJSRuntime JS
 
-@using System.IO
 @using myon.Components
 
 <div id="warpper">
 
     <div id="ArticleMenu">
-    <Panel Heigth="100%">
+    <Panel>
         <div id="ArticleMenuInsideLayout">
             <div id="MyonSign">
                 <strong id=MyonText>Myon~</strong>
                 <span id=SignText>@SignText</span>
             </div>
-            <div id="ArticlesIndex">
-                <div id="ArticleContentIndex">
-                    @foreach(var article in articles)
-                    {
-                        <div class="ArticleOnMenu" @onclick="@(_ => { SetFocusArticle(article.Title); ScrollToArticleAsync(article);})">
-                        <Panel Heigth="100%">
-                            @article.Title
-                        </Panel>
-                        </div>
-                    }
-                </div>
+            <div id="ArticleNavSide">
+                @foreach(var article in articles)
+                {
+                    <div class="ArticleNavContentWarpper" @onclick="@(() => {
+                        SetFocusArticle(article.Title); ScrollToArticleAsync(article);})">
+                    <Panel>
+                        <ul>
+                            @foreach (var headingKeyValuePair in article.ArticleIndex)
+                            {
+                            <li>
+                                <NavLink herf="@("#"+headingKeyValuePair.Key)">@headingKeyValuePair.Value</NavLink>
+                            </li>
+                            }
+                        </ul>
+                    </Panel>
+                    </div>
+                }
             </div>
             <div id="Other"></div>
         </div>

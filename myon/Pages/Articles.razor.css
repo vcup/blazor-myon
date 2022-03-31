@@ -7,7 +7,7 @@
 }
 
 
-div#ArticleMenu {
+#ArticleMenu {
     width: 16.8vw;
     height: 95.33vh;
     position: fixed;
@@ -41,23 +41,18 @@ div#MyonSign {
     color: #707070;
 }
 
-
-div#ArticlesIndex {
-    display:grid;
-    grid-template-rows: auto;
-}
-
-div#ArticleContentIndex {
+div#ArticleNavSide {
     overflow-y: scroll;
 }
-div#ArticleContentIndex::-webkit-scrollbar {
+div#ArticleNavSide::-webkit-scrollbar {
     display: none;
 }
 
-div.ArticleOnMenu {
+.ArticleNavContentWarpper {
     height: 8vh;
     margin-bottom: 8px;
 }
+
 
 div#Other {
 
@@ -66,4 +61,8 @@ div#Other {
 main#Articles {
     display: grid;
     gap: 16px;
+}
+
+.invisible {
+    visibility: hidden;
 }

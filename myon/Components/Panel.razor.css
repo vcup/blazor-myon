@@ -1,4 +1,5 @@
 ﻿div.Panel {
+    height: 100%;
     border: 2px solid;
     border-radius: 16px;
     border-color: #707070;

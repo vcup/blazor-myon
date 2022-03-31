@@ -6,18 +6,36 @@
 <Panel ID=@Title>
     <div style="margin:16px">
     <h1>@Title</h1>
-    <Markdown ID="@Title" Path=@Path.Join("wwwroot/Articles", Title + ".md") @ref="markdown"/>
+
+    @markupString
     </div>
 </Panel>
 
 @code {
+    [Inject]
+    private MarkdownParserService markdownService { get; set; } = null!;
+
+    private MarkupString markupString;
+
+    private string path => Path.Join("wwwroot/Articles", Title +".md");
+
     [Parameter]
     public bool IsMainComponent { get; set; } = false;
 
     [Parameter]
     public string? Title { get; set; }
 
-    private Markdown markdown;
+    protected override Task OnParametersSetAsync()
+    {
 
-    public string[] ArticleIndex => markdown.HeadingIDs.ToArray();
+        markupString = new(markdownService.GetHtmlFormMarkdownFile(path));
+
+        if(markdownService.MarkdownHeadings.Count is not 0)
+        {
+            ArticleIndex = markdownService.MarkdownHeadings;
+        }
+        return base.OnParametersSetAsync();
+    }
+
+    public Dictionary<string, string> ArticleIndex { get; set; } = null!;
 }

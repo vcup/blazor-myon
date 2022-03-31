@@ -37,54 +37,66 @@ public class AutoIDExtension : IMarkdownExtension
     {
         if (block is HeadingBlock headingBlock)
         {
-            headingBlock.ProcessInlinesEnd += HeadingBlock_ProcessInlineEnd;
+            var warpper = new Warpper(this, headingBlock);
+            headingBlock.ProcessInlinesEnd += warpper.HeadingBlock_ProcessInlineEnd;
         }
     }
 
-    private void HeadingBlock_ProcessInlineEnd(InlineProcessor processor, Inline? inline)
+    private class Warpper
     {
-        var SectionNOs = processor.Document.GetData(AutoIDExtensionKey) as Dictionary<int, int>;
-        if (SectionNOs is null)
+        private string heading;
+
+        public AutoIDExtension parent;
+
+        public Warpper(AutoIDExtension parent, HeadingBlock headingBlock)
         {
-            SectionNOs = new();
-            processor.Document.SetData(AutoIDExtensionKey, SectionNOs);
+            this.parent = parent;
+            heading = headingBlock.Lines.Lines[0].ToString();
         }
 
-        var headingBlock = (processor.Block as HeadingBlock)!;
-        if (headingBlock.Inline is null)
+        public void HeadingBlock_ProcessInlineEnd(InlineProcessor processor, Inline? _)
         {
-            return;
+            var SectionNOs = processor.Document.GetData(AutoIDExtensionKey) as Dictionary<int, int>;
+            if (SectionNOs is null)
+            {
+                SectionNOs = new();
+                processor.Document.SetData(AutoIDExtensionKey, SectionNOs);
+            }
+
+            var headingBlock = (processor.Block as HeadingBlock)!;
+            if (headingBlock.Inline is null)
+            {
+                return;
+            }
+
+            var attributes = headingBlock.GetAttributes();
+
+            #region Generate SectionNumber
+
+            var level = headingBlock.Level;
+            SectionNOs.TryAdd(level, 0);
+            SectionNOs[headingBlock.Level]++;
+
+            var sectionText = "";
+            while (level > 0)
+            {
+                SectionNOs.TryGetValue(level, out var lastSectionNo);
+                sectionText = string.IsNullOrEmpty(sectionText) ? lastSectionNo.ToString() : $"{lastSectionNo}-{sectionText}";
+                level--;
+            }
+
+            #endregion
+
+            if ((parent.option & AutoIDExtensionOption.UseAutoPrefix) != 0 && parent.prefix is not null)
+                sectionText = $"{parent.prefix}-{sectionText}";
+
+            if ((parent.option & AutoIDExtensionOption.StichOrginalId) != 0)
+                sectionText = $"{sectionText}-{attributes.Id}";
+
+            parent.WhenSettedId?.Invoke(attributes.Id = sectionText, heading);
         }
-
-        var attributes = headingBlock.GetAttributes();
-
-        #region Generate SectionNumber
-
-        var level = headingBlock.Level;
-        SectionNOs.TryAdd(level, 0);
-        SectionNOs[headingBlock.Level]++;
-
-        var sectionText = "";
-        while (level > 0)
-        {
-            SectionNOs.TryGetValue(level, out var lastSectionNo);
-            sectionText = string.IsNullOrEmpty(sectionText) ? lastSectionNo.ToString() : $"{lastSectionNo}-{sectionText}";
-            level--;
-        }
-
-        #endregion
-
-        if ((option & AutoIDExtensionOption.UseAutoPrefix) != 0 && prefix is not null)
-            sectionText = $"{prefix}-{sectionText}";
-
-        if ((option & AutoIDExtensionOption.StichOrginalId) != 0)
-            sectionText = $"{sectionText}-{attributes.Id}";
-
-        var v = (option & AutoIDExtensionOption.StichOrginalId);
-
-        WhenSettedId(attributes.Id = sectionText);
     }
 
-    public delegate void IdSettedIdHandler(string id);
-    public event IdSettedIdHandler WhenSettedId;
+    public delegate void IdSettedIdHandler(string id, string Heading);
+    public event IdSettedIdHandler? WhenSettedId;
 }

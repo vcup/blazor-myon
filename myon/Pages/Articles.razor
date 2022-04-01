@@ -13,22 +13,24 @@
                 <span id=SignText>@SignText</span>
             </div>
             <div id="ArticleNavSide">
-                @foreach(var article in articles)
-                {
-                    <div class="ArticleNavContentWarpper" @onclick="@(() => {
-                        SetFocusArticle(article.Title); ScrollToArticleAsync(article);})">
+            @foreach(var article in articles)
+            {
+                var isFocus = FocusArticle == article;
+                <div class="ArticleNavPanel" @onclick="@(() => {
+                    SetFocusArticle(article.Title); ScrollToArticleAsync(article);})">
                     <Panel>
-                        <ul>
-                            @foreach (var headingKeyValuePair in article.ArticleIndex)
-                            {
-                            <li>
-                                <NavLink herf="@("#"+headingKeyValuePair.Key)">@headingKeyValuePair.Value</NavLink>
-                            </li>
-                            }
-                        </ul>
+                        @article.Title
                     </Panel>
-                    </div>
-                }
+                </div>
+                <ul class="heading-list @(isFocus ? "unhide":"hide")">
+                    @foreach (var (id, heading) in article.ArticleIndex)
+                    {
+                    <li @onclick="@(() => this.ScrollToIdAsync(@id))">
+                        @heading
+                    </li>
+                    }
+                </ul>
+            }
             </div>
             <div id="Other"></div>
         </div>
@@ -39,16 +41,15 @@
 
     <main id="Articles">
         @{
-            var i = 0;
-            foreach (var title in Directory.EnumerateFiles(ArticlesPath)
-                                           .Select(Path.GetFileNameWithoutExtension))
-            {
-                var index = i++;
-                <div @onpointerover="@(_ => SetFocusArticle(index))">
-                <Article Title=@title IsMainComponent=@(title == Title) @ref="addArticleToList"/>
-                </div>
-            }
-        }
+        var i = 0;
+        foreach (var title in Directory.EnumerateFiles(ArticlesPath)
+                                       .Select(Path.GetFileNameWithoutExtension))
+        {
+            var index = i++;
+            <div @onpointerover="@(_ => SetFocusArticle(index))">
+            <Article Title=@title IsMainComponent=@(title == Title) @ref="addArticleToList"/>
+            </div>
+        }}
     </main>
 
 </div>
@@ -67,7 +68,7 @@
     {
         if (SpecifyArticle is not null)
         {
-            ScrollToArticleAsync(SpecifyArticle);
+            ScrollToIdAsync(SpecifyArticle);
             SetFocusArticle(SpecifyArticle);
             StateHasChanged(); // 如果不调用，则尽管FocusArticle和Title都已更新，仍旧不会在标题中显示Title
         }
@@ -83,6 +84,6 @@
     private void SetFocusArticle(int index) => FocusArticle = articles.ElementAt(index);
     private void SetFocusArticle(string title) => FocusArticle = articles.Where(a => a.Title == title).ElementAtOrDefault(0) ?? FocusArticle;
 
-    private async void ScrollToArticleAsync(string title) => await JS.InvokeVoidAsync("scrollToElementByID", title);
-    private void ScrollToArticleAsync(Article article) => ScrollToArticleAsync(article.Title!);
+    private async void ScrollToIdAsync(string title) => await JS.InvokeVoidAsync("scrollToElementByID", title);
+    private void ScrollToArticleAsync(Article article) => ScrollToIdAsync(article.Title!);
 }

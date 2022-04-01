@@ -41,15 +41,21 @@ div#MyonSign {
     color: #707070;
 }
 
-div#ArticleNavSide {
+#ArticleNavSide {
     overflow-y: scroll;
 }
 div#ArticleNavSide::-webkit-scrollbar {
     display: none;
 }
 
-.ArticleNavContentWarpper {
+.ArticleNavWarpper {
+}
+
+.ArticleNavPanel {
     height: 8vh;
+}
+
+.heading-list {
     margin-bottom: 8px;
 }
 
@@ -63,6 +69,24 @@ main#Articles {
     gap: 16px;
 }
 
-.invisible {
-    visibility: hidden;
+
+.hide {
+    animation-name: short-to-tall;
+    animation-direction: reverse;
+    animation-fill-mode: forwards;
+    overflow: hidden;
+}
+
+.unhide {
+    animation-name: short-to-tall;
+    animation-fill-mode: forwards;
+}
+
+@keyframes short-to-tall{
+    from {
+        height: 0px;
+    }
+    to {
+        height: auto;
+    }
 }
